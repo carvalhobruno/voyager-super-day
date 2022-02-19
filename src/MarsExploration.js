@@ -3,6 +3,26 @@ class MarsExploration {
     this.plateau = {};
     // TODO: Change to list of rovers
     this.rovers = [];
+
+    // It~s not a real state machine, just the idea
+    this.directionsMap = {
+      N: {
+        L: "W",
+        R: "E"
+      },
+      E: {
+        L: "N",
+        R: "S"
+      },
+      S: {
+        L: "E",
+        R: "W"
+      },
+      W: {
+        L: "S",
+        R: "N"
+      }
+    }
   }
 
   definePlateauSize(name, upperRightCoordinates) {
@@ -44,7 +64,7 @@ class MarsExploration {
       id: roverId,
       name: name,
       positionX: Number(positionAsVector[0]),
-      posiitionY: Number(positionAsVector[1]),
+      positionY: Number(positionAsVector[1]),
       orientation: positionAsVector[2]
     };
     
@@ -59,11 +79,45 @@ class MarsExploration {
       return new Error("Rover not found");
     }
 
-    
+    for(let i = 0; i < commands.length; i++) {
+      const command = commands[i].toUpperCase();
+      console.log(command);
+
+      if(command === "L" || command === "R") {
+        rover.orientation = this.directionsMap[rover.orientation][command];
+      }
+      else if(command === "M") {
+        this.move(rover);
+      }
+    }
+
+    return { 
+      newOrientation: rover.orientation,
+      newPositionX: rover.positionX,
+      newPositionY: rover.positionY
+    }
+  }
+
+  move(rover) {
+    switch(rover.orientation) {
+      case "N":
+        rover.positionY = rover.positionY + 1
+        break;
+      case "S":
+        rover.positionY = rover.positionY - 1
+        break;
+      case "E":
+        rover.positionX = rover.positionX + 1
+        break;
+      case "W":
+        rover.positionX = rover.positionX - 1
+        break;
+    }
   }
 
   getRoverPositionMessage(roverId) {
-
+    const rover = this.rovers.find(({id}) => id === roverId);
+    return `Rover "${rover.name}" is now at position ${rover.positionX} ${rover.positionY} ${rover.orientation}`
   }
 }
 
