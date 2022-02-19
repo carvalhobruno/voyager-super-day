@@ -10,6 +10,8 @@ test('Define Mars Plateou Size', () => {
   });
 });
 
+// TODO: Add tests to cover what happens with no parameters
+
 test('Land Rover on Mars', () => {
   const exploration = new MarsExplorastion();
   const rover = exploration.landRover(1, 'Eagle', '1 2 N');
