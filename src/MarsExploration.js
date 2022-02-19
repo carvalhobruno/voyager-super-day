@@ -4,7 +4,7 @@ class MarsExploration {
     // TODO: Change to list of rovers
     this.rovers = [];
 
-    // It~s not a real state machine, just the idea
+    // It's not a real state machine, just the idea
     this.directionsMap = {
       N: {
         L: "W",
@@ -28,11 +28,11 @@ class MarsExploration {
   definePlateauSize(name, upperRightCoordinates) {
     // TODO: Add error dictionary and error handling function
     if(!name) {
-      return new Error("Please name your plateau");
+      throw new Error("Please name your plateau");
     }
 
     if(!upperRightCoordinates) {
-      return new Error("Please tell your upperRightCoordinates");
+      throw new Error("Please tell your upperRightCoordinates");
     }
 
     this.plateau.name = name;
@@ -45,18 +45,18 @@ class MarsExploration {
 
   landRover(roverId, name, landingPosition) {
     if(!roverId) {
-      return new Error("Please roverId your plateau");
+      throw new Error("Please identify your rover");
     }
 
     if(this.rovers.find(({id}) => id === roverId)) {
-      return new Error("Id is being used by another rover");
+      throw new Error("Id is being used by another rover");
     }
 
     if(!name) {
-      return new Error("Please name your rover");
+      throw new Error("Please name your rover");
     }
     if(!landingPosition) {
-      return new Error("Please tell your landingPosition");
+      throw new Error("Please tell your landingPosition");
     }
 
     const positionAsVector = landingPosition.split(" ");
@@ -74,14 +74,21 @@ class MarsExploration {
   }
 
   moveRover(roverId, commands) {
+    if(!roverId) {
+      throw new Error("Please identify your rover");
+    }
+
+    if(!commands) {
+      throw new Error("Please add commands to your rover");
+    }
+
     const rover = this.rovers.find(({id}) => id === roverId);
     if(!rover) {
-      return new Error("Rover not found");
+      throw new Error("Rover not found");
     }
 
     for(let i = 0; i < commands.length; i++) {
       const command = commands[i].toUpperCase();
-      console.log(command);
 
       if(command === "L" || command === "R") {
         rover.orientation = this.directionsMap[rover.orientation][command];
@@ -117,6 +124,9 @@ class MarsExploration {
 
   getRoverPositionMessage(roverId) {
     const rover = this.rovers.find(({id}) => id === roverId);
+    if(!rover) {
+      throw new Error("Rover not found");
+    }
     return `Rover "${rover.name}" is now at position ${rover.positionX} ${rover.positionY} ${rover.orientation}`
   }
 }
